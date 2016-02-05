@@ -42,6 +42,8 @@ dt {
 	padding: 10px 20px;
 	border-radius: 10px;
 	border: 1px solid #95a5a6;
+	position: relative;
+	left: 0;
 }
 
 
@@ -60,6 +62,12 @@ dt {
 	font-size: 2rem;
 }
 
+.message {
+	margin-left: 10px;
+	padding: 5px 10px;
+	background-color: #e74c3c;
+	color: white;
+}
 
 footer {
 	width: 100%;

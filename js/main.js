@@ -100,15 +100,43 @@ var Ingredients = function(name, cals, vegan, glutenFree, citrusFree) {
 
 // DRINKS
 var drinkArray = [];
-var DrinkItem = function(name, description, price, contents, vegan, glutenFree, citrusFree) {
+var DrinkItem = function(name, description, price, contents) {
 	this.name = name;
 	this.description = description;
 	this.price = price;
 	this.contents = contents;
-	this.vegan = vegan;
-	this.glutenFree = glutenFree;
-	this.citrusFree = citrusFree;
+	this.activeToolTip = false;
 	drinkArray.push(this)
+}
+DrinkItem.prototype.isVegan = function(){
+	var vegan = true;
+
+	this.contents.forEach(function (element) {
+		if(element.vegan === false) {
+			vegan = false
+		}
+	})
+	return vegan
+}
+DrinkItem.prototype.isGlutenFree = function(){
+	var glutenFree = true;
+
+	this.contents.forEach(function (element) {
+		if(element.glutenFree === false) {
+			glutenFree = false
+		}
+	})
+	return glutenFree
+}
+DrinkItem.prototype.isCitrusFree = function(){
+	var citrusFree = true;
+
+	this.contents.forEach(function (element) {
+		if(element.citrusFree === false) {
+			citrusFree = false
+		}
+	})
+	return citrusFree
 }
 
 		var moscowMule = new DrinkItem (
@@ -154,18 +182,47 @@ var DrinkItem = function(name, description, price, contents, vegan, glutenFree, 
 
 
 var plateArray = [];
-		var FoodPlate = function(name, description, price, contents, vegan, glutenFree, citrusFree) {
+		var FoodPlate = function(name, description, price, contents) {
 
 			this.name = name;
 			this.description = description;
 			this.price = price;
 			this.contents = contents;
-			this.vegan = vegan;
-			this.glutenFree = glutenFree;
-			this.citrusFree = citrusFree;
+			this.activeToolTip = false;
 			plateArray.push(this)
 
 		}
+FoodPlate.prototype.isVegan = function(){
+	var vegan = true;
+
+	this.contents.forEach(function (element) {
+		if(element.vegan === false) {
+			vegan = false
+		}
+	})
+	return vegan
+}
+FoodPlate.prototype.isGlutenFree = function(){
+	var glutenFree = true;
+
+	this.contents.forEach(function (element) {
+		if(element.glutenFree === false) {
+			glutenFree = false
+		}
+	})
+	return glutenFree
+}
+FoodPlate.prototype.isCitrusFree = function(){
+	var citrusFree = true;
+
+	this.contents.forEach(function (element) {
+		if(element.citrusFree === false) {
+			citrusFree = false
+		}
+	})
+	return citrusFree
+}
+
 
 		var banhMi = new FoodPlate (
 
@@ -174,9 +231,7 @@ var plateArray = [];
 			14.95,
 			[bread, lamb],
 			false,
-			false,
 			true
-
 			)
 
 		var poutine = new FoodPlate (
@@ -186,7 +241,6 @@ var plateArray = [];
 			18.95,
 			[potatoes, gravy],
 			false,
-			true,
 			true
 
 			)
@@ -198,10 +252,10 @@ var plateArray = [];
 			12.95,
 			[escargot, gravy, citrus, bread],
 			false,
-			false,
 			true
 
 			)
+console.log(escargot.isGlutenFree())
 
 // MENU
 
@@ -265,27 +319,16 @@ var Customer = function(vegan, glutenFree, citrusFree){
 	custyArray.push(this)
 }
 
-	var customerDiet = new Customer( true, false, false )
-
-
-
-// TRUTHY-FALSEY LISTS
-// var trueFalseSetter = [{
-// 				hideDescription : true,
-// 				hideVegan : true,
-// 				hideGlutenFree : true,
-// 				hideCitrusFree	: true,
-// 				hideUserBox: true
-// 		}]
-
 ///////////////////////////////
 
 	return {
 
 		restaurant		: restaurantInfo,
 		menuArray		: menuArray,
-		custyArray  	: custyArray
-		// trueFalseSetter	: trueFalseSetter
+		custyArray  	: custyArray,
+		ingredientArray : ingredientArray,
+		drinkArray		: drinkArray,
+		plateArray		: plateArray
 
 	}
 
@@ -306,7 +349,9 @@ angular.module('RestaurantApp')
 		$scope.custyArray = factoryRestInfo.custyArray;
 		$scope.menuComplete = factoryRestInfo.menuArray; 
 		$scope.restaurantDeets = factoryRestInfo.restaurant;
-			// $scope.trueFalseSetter = factoryRestInfo.trueFalseSetter
+		$scope.ingredientArray = factoryRestInfo.ingredientArray;
+		$scope.drinkArray = factoryRestInfo.drinkArray;
+		$scope.plateArray = factoryRestInfo.plateArray
 
 		// SHOW-HIDE FUNCTIONS 
 
@@ -333,67 +378,70 @@ angular.module('RestaurantApp')
 			}
 
 
-		// CUSTOMER DIET INFO
 
-		$scope.saveCusty = function() {
-				$scope.listAppearWhenClicked = !$scope.listAppearWhenClicked;
-				if ($scope.listAppearWhenClicked === !true) {
-						$scope.userMessage = "Enter Your Info"
-					}
-					else {
-						$scope.userMessage = "Close"
-					}
+		// CUSTOMER INFO & TOOLTIPPER
+
+		$scope.emptyForm = function () {
+			$scope.diet = {
+			name: "",
+			address: "",
+			phone: "",
+			vegan : "",
+			glutenFree : "",
+			citrusFree : ""
 			}
+		}
 
-		// $scope.dietAdder = function(vegan, glutenFree, citrusFree) {
-		// 	$scope.custOutput = {vegan: vegan, glutenFree: glutenFree, citrusFree: citrusFree}
-		// 	$scope.custyArray.push($scope.custOutput);
+		// $scope.reset = function () {
+		// 	$scope.form.$setPristine();
 		// }
 
-		// if ($scope.diet === vegan){
-		// }
-
-		// console.log($scope)
-
-
-
-
-		// TOOLTIP-- when submit button is pressed
 
 		$scope.activeToolTip = false;
 		$scope.toolTipper = function() {
-			$scope.activeToolTip =! $scope.activeToolTip;
+			$scope.activeToolTip = !$scope.activeToolTip;
+			}
+
+		$scope.saveCusty = function() {
+				$scope.listAppearWhenClicked = !$scope.listAppearWhenClicked;
+				$scope.custyArray.push($scope.diet);
+				console.log($scope.custyArray)
+
+
+
+			for (var i = 0; i < $scope.custyArray.length; i++) {
+
+				for (var j = 0; j < $scope.plateArray.length; j++) {
+					if ( $scope.custyArray[i].vegan === true && $scope.plateArray[j].isVegan() === false) {
+						$scope.plateArray[j].activeToolTip = true;
+					}
+					else if ($scope.custyArray[i].glutenFree === true && $scope.plateArray[j].isGlutenFree() === false){
+						$scope.plateArray[j].activeToolTip = true;
+					}
+					else if ($scope.custyArray[i].citrusFree === true && $scope.plateArray[j].isCitrusFree() === false){
+						$scope.plateArray[j].activeToolTip = true;
+					}
+				}
+				for (var j = 0; j < $scope.drinkArray.length; j++) {
+					if ( $scope.custyArray[i].vegan === true && $scope.drinkArray[j].isVegan() === false) {
+						$scope.drinkArray[j].activeToolTip = true;
+					}
+					else if ($scope.custyArray[i].glutenFree === true && $scope.drinkArray[j].isGlutenFree() === false){
+						$scope.drinkArray[j].activeToolTip = true;
+					}
+					else if ($scope.custyArray[i].citrusFree === true && $scope.drinkArray[j].isCitrusFree() === false){
+						$scope.drinkArray[j].activeToolTip = true;
+					}
+				}	
+
 		}
-
-
-		// console.log($scope.menuComplete.drinks[1].citrusFree)
-		// var drinksReference = $scope.menuComplete.drinks
-		// 	for(var i=0; i<drinksReference.length; i++){
-		// 		if(drinksReference[i].citrusFree === drinksReference[i].citrusFree || citrusFree === false){
-		// 			// return tooltip
-		// 			}
-		// 		else{
-		// 			// return nothing
-		// 		}	
-		// 	}
-
-
-		// var foodsReference = $scope.menuComplete.foods 
-
-
-
-
+			$scope.emptyForm();
+				if ($scope.listAppearWhenClicked === !true) {
+					$scope.userMessage = "Enter Your Info"
+				}
+				else {
+					$scope.userMessage = "Close"
+				}
+		}
 	}]);
-
-
-
-
-
-
-
-
-
-
-
-
 
