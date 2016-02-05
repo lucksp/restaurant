@@ -6,14 +6,15 @@ angular.module('RestaurantApp')
 
 // INGREDIENTS
 
+var ingredientArray = [];
 var Ingredients = function(name, cals, vegan, glutenFree, citrusFree) {
 
 	this.name = name,
 	this.cals = cals,
 	this.vegan = vegan,
 	this.glutenFree = glutenFree,
-	this.citrusFree = citrusFree
-
+	this.citrusFree = citrusFree,
+	ingredientArray.push(this)
 }
 
 		var bread = new Ingredients (
@@ -102,7 +103,7 @@ var drinkArray = [];
 var DrinkItem = function(name, description, price, contents, vegan, glutenFree, citrusFree) {
 	this.name = name;
 	this.description = description;
-	this.price = '$' + price;
+	this.price = price;
 	this.contents = contents;
 	this.vegan = vegan;
 	this.glutenFree = glutenFree;
@@ -131,19 +132,19 @@ var DrinkItem = function(name, description, price, contents, vegan, glutenFree, 
 			[vodka, citrus],
 			true,
 			true,
-			true
+			false
 
 			)
 
 		var wine = new DrinkItem (
 
 			'House, White, or Red',
-			'Enjoy stunning regional wines from our favorite producers in Provence',
-			8.50,
+			'Enjoy stunning regional wines from our favorite producers in Provence.',
+			8,
 			[citrus],
 			true,
 			true,
-			true
+			false
 
 			)
 
@@ -157,7 +158,7 @@ var plateArray = [];
 
 			this.name = name;
 			this.description = description;
-			this.price = '$' + price;
+			this.price = price;
 			this.contents = contents;
 			this.vegan = vegan;
 			this.glutenFree = glutenFree;
@@ -181,7 +182,7 @@ var plateArray = [];
 		var poutine = new FoodPlate (
 
 			'Duck Fat Brisket Poutine',
-			'French fries luxourisly covered in a duck fat gravy with tender Brisket',
+			'French fries luxourisly covered in a duck fat gravy with tender Brisket.',
 			18.95,
 			[potatoes, gravy],
 			false,
@@ -248,33 +249,34 @@ var Restaurant = function(name, address, phone, description, email, owners, menu
 			'Restaurant de Semain',
 			'101 Main Street.  Boulder, CO 80303',
 			'303-EAT-HERE',
-			'A fusion of Vietnamese and modern French, focusing on bold flavors and exciting drink pairings.  We offer items to consider most dietary restrictions too!!',
+			'A fusion of Vietnamese and modern French, focusing on bold flavors and exciting drink pairings.  We offer items to consider most dietary restrictions too!!\nOrder Online when browsing our menu below.',
 			'semain@eat-here.com',
 			'Nadya Hill and Phil Lucks',
 			menuArray
 
 			)
-
-
 // CUSTOMER
 
+var custyArray = []
 var Customer = function(vegan, glutenFree, citrusFree){
 	this.vegan = vegan
 	this.glutenFree = glutenFree
 	this.citrusFree = citrusFree
+	custyArray.push(this)
 }
 
 	var customerDiet = new Customer( true, false, false )
 
 
+
 // TRUTHY-FALSEY LISTS
-var trueFalseSetter = [{
-				hideDescription : true,
-				hideVegan : true,
-				hideGlutenFree : true,
-				hideCitrusFree	: true,
-				hideItemBox: true
-		}]
+// var trueFalseSetter = [{
+// 				hideDescription : true,
+// 				hideVegan : true,
+// 				hideGlutenFree : true,
+// 				hideCitrusFree	: true,
+// 				hideUserBox: true
+// 		}]
 
 ///////////////////////////////
 
@@ -282,7 +284,8 @@ var trueFalseSetter = [{
 
 		restaurant		: restaurantInfo,
 		menuArray		: menuArray,
-		trueFalseSetter	: trueFalseSetter
+		custyArray  	: custyArray
+		// trueFalseSetter	: trueFalseSetter
 
 	}
 
@@ -298,17 +301,86 @@ var trueFalseSetter = [{
 angular.module('RestaurantApp')
 	.controller('controllerRestaurant', ['$scope', 'factoryRestInfo', function($scope, factoryRestInfo) {
 
+		// FACORY to CONTROLLER SCOPES
 
-		// SCOPES
-
+		$scope.custyArray = factoryRestInfo.custyArray;
 		$scope.menuComplete = factoryRestInfo.menuArray; 
 		$scope.restaurantDeets = factoryRestInfo.restaurant;
-		$scope.trueFalseSetter = factoryRestInfo.trueFalseSetter
+			// $scope.trueFalseSetter = factoryRestInfo.trueFalseSetter
 
-		// CLICK FUNCTIONS
-		// $scope.showToolTip = function() {
+		// SHOW-HIDE FUNCTIONS 
 
+		$scope.userMessage = "Enter Your Info"	
+			$scope.messageList = function() {
+				$scope.listAppearWhenClicked = !$scope.listAppearWhenClicked;
+					if ($scope.listAppearWhenClicked === !true) {
+						$scope.userMessage = "Enter Your Info"
+					}
+					else {
+						$scope.userMessage = "Close"
+					}
+				}
+
+		// ORDER TOTAL FUNCTION
+
+		$scope.rounded = 0
+		$scope.orderTotal = 0
+		$scope.order = [];
+			$scope.addItem = function (item) {
+				$scope.order.push(item)
+				$scope.orderTotal = $scope.orderTotal+item.price;
+				$scope.rounded = $scope.orderTotal.toFixed(2);
+			}
+
+
+		// CUSTOMER DIET INFO
+
+		$scope.saveCusty = function() {
+				$scope.listAppearWhenClicked = !$scope.listAppearWhenClicked;
+				if ($scope.listAppearWhenClicked === !true) {
+						$scope.userMessage = "Enter Your Info"
+					}
+					else {
+						$scope.userMessage = "Close"
+					}
+			}
+
+		// $scope.dietAdder = function(vegan, glutenFree, citrusFree) {
+		// 	$scope.custOutput = {vegan: vegan, glutenFree: glutenFree, citrusFree: citrusFree}
+		// 	$scope.custyArray.push($scope.custOutput);
 		// }
+
+		// if ($scope.diet === vegan){
+		// }
+
+		// console.log($scope)
+
+
+
+
+		// TOOLTIP-- when submit button is pressed
+
+		$scope.activeToolTip = false;
+		$scope.toolTipper = function() {
+			$scope.activeToolTip =! $scope.activeToolTip;
+		}
+
+
+		// console.log($scope.menuComplete.drinks[1].citrusFree)
+		// var drinksReference = $scope.menuComplete.drinks
+		// 	for(var i=0; i<drinksReference.length; i++){
+		// 		if(drinksReference[i].citrusFree === drinksReference[i].citrusFree || citrusFree === false){
+		// 			// return tooltip
+		// 			}
+		// 		else{
+		// 			// return nothing
+		// 		}	
+		// 	}
+
+
+		// var foodsReference = $scope.menuComplete.foods 
+
+
 
 
 	}]);

@@ -1,0 +1,76 @@
+body {
+	padding-bottom: 0;
+}
+
+.featurette-divider {
+	margin: 40px 0;
+}
+
+.carousel img {
+  width: 100vw;
+  object-fit: cover;
+  overflow: hidden;
+  	border-bottom: 3px solid #928c8c;
+
+}
+
+.userBtn {
+	background-color: #f0ad4e;
+}
+
+.diet .text {
+	width: 90%;
+	margin-bottom: 5px;
+}
+
+.diet .checkbox {
+	display: inline;
+	margin-right: 5px;
+}
+
+dt {
+	font-size: 2rem;
+}
+
+.details {
+	display: inline;
+}
+
+.add button {
+	background-color: #2980b9;
+	color: white;
+	padding: 10px 20px;
+	border-radius: 10px;
+	border: 1px solid #95a5a6;
+}
+
+
+.cart {
+	position: fixed;
+	bottom: 0px;
+	right: 0px;
+	background-color: rgba(237,167,193, 0.75);
+	width: 150px;
+	text-align: center;
+	padding: 10px 10px;
+	margin-bottom: 151px;
+}
+
+.cart h2 {
+	font-size: 2rem;
+}
+
+
+footer {
+	width: 100%;
+	padding: 60px 40px;
+	font-size: 1.5rem;
+	background-color: #5a5a5a;
+	color: #fff;
+}
+
+footer a {
+	color: #fff;
+	text-decoration: none;
+	font-size: 1.5rem;
+}

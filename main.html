@@ -26,10 +26,10 @@
   <body ng-controller="controllerRestaurant">
     <!-- Carousel
     ================================================== -->
-    <div id="myCarousel" class="carousel slide" data-ride="carousel">
-      <div class="carousel-inner" role="listbox">
+    <div class="carousel slide">
+      <div class="carousel-inner">
         <div class="item active">
-          <img class="first-slide" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="First slide">
+          <img src="https://pixabay.com/static/uploads/photo/2015/07/09/15/21/table-837977_960_720.jpg" alt="First slide">
           <div class="container">
             <div class="carousel-caption">
               <h1>{{restaurantDeets.name}}</h1>
@@ -49,18 +49,35 @@
 
       <!-- Three columns of text below the carousel -->
       <div class="row">
-        <div class="col-lg-6">
-          <img class="img-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
+        <div class="col-lg-4">
+          <img class="img-circle" src="http://oceanvodka.com/wp-content/uploads/2015/08/011515_Winterlude_2015_Moscow_Mule_Blog_FINAL1.jpg" alt="drink image" width="140" height="140">
           <h2>House Beverages</h2>
           <p>What goes well with your order of food?  How about a refreshing beverage.</p>
           <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-        </div><!-- /.col-lg-6 -->
-        <div class="col-lg-6">
-          <img class="img-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image" width="140" height="140">
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-4">
+          <img class="img-circle" src="https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-group-256.png" alt="user Pref" width="140" height="140">
+          <h2>Order Preferences</h2>
+          <p>Do you have any dietary preferences we should know about?  Please fill out your information here:</p>
+          <p><a class="btn btn-default userBtn" role="button" ng-click="messageList()">{{userMessage}} &raquo;</a></p>
+            <div class="diet" ng-show="listAppearWhenClicked">
+              <input class="text" type="text" placeholder="Name"><br>
+              <input class="text" type="text" placeholder="Address"><br>
+              <input class="text" type="text" placeholder="Phone"><br>
+              <form ng-submit="saveCusty()">
+                <input ng-model="diet.vegan" class="checkbox" type="checkbox" value="vegan" ng-change"dietAdder()">Vegan<br>
+                <input ng-model="diet.gluten" class="checkbox" type="checkbox" value="gluten" ng-change"dietAdder()">Gluten Free<br>
+                <input ng-model="diet.citrus" class="checkbox" type="checkbox" value="citrus" ng-change"dietAdder()">Citrus Free<br>
+                  <input ng-click="toolTipper()" type="submit" value="Submit Your Preferences">
+              </form>
+            </div>
+        </div><!-- /.col-lg-4 -->
+        <div class="col-lg-4">
+          <img class="img-circle" src="https://s-media-cache-ak0.pinimg.com/736x/e6/52/24/e652240e387d30a722f7f5787a7ba269.jpg" alt="food image" width="140" height="140">
           <h2>Food Items</h2>
           <p>Locally sources, hand picked, slowly cook and better to be slowly eaten dishes to excite your pallet.</p>
           <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-        </div><!-- /.col-lg-6 -->
+        </div><!-- /.col-lg-4 -->
       </div><!-- /.row -->
 
 
@@ -71,13 +88,27 @@
       <div class="row featurette">
         <div class="col-md-7">
           <h2 class="featurette-heading">House Beverages</h2>
-            <ul ng-repeat="drinks in menuComplete.drinks">
-              <li class="menuItems" >{{drinks.name}}, {{drinks.price}}</li>
-                <li class="details">{{drinks.contents}}</li>
-            </ul>
+            <dl ng-repeat="bev in menuComplete.drinks" class="drinkMenu">
+              <dt class="menuItems">{{bev.name}}, ${{bev.price}}</dt>
+              <dd class="description">{{bev.description}}</dd>
+                <dd class="details" ng-repeat="ingredient in bev.contents">{{ingredient.name}}</dd>
+                <dd class="add"><button type="button" ng-click="addItem(bev)">Add to Cart</button><span ng-hide="toolTipper()">WARNING: THIS DOES NOT MEET YOUR FOOD PREFERENCES</span></dd>
+            </dl>
         </div>
+
+<!--         <div ng-repeat="drankz in menuComplete.drinks">
+          <p>{{drankz.citrusFree}}</p>
+          <p>{{ingredient.citrusFree}}</p>
+        </div>
+
+        <div ng-repeat="fudz in menuComplete.foods">
+          <p>{{fudz.citrusFree}}</p>
+          <p>{{ingredient.citrusFree}}</p>
+        </div> -->
+
+
         <div class="col-md-5">
-          <img class="featurette-image img-responsive center-block" data-src="holder.js/500x500/auto" alt="Generic placeholder image">
+          <img class="featurette-image img-responsive center-block" src="http://oceanvodka.com/wp-content/uploads/2015/08/011515_Winterlude_2015_Moscow_Mule_Blog_FINAL1.jpg" alt="drink menu image">
         </div>
       </div>
 
@@ -86,19 +117,27 @@
       <div class="row featurette">
         <div class="col-md-7 col-md-push-5">
           <h2 class="featurette-heading">Fresh Food</h2>
-            <ul>
-              <li class="menuItems" ng-repeat="food in menuComplete.foods">{{food.name}}, {{food.price}}</li>
-            </ul>
+            <dl ng-repeat="food in menuComplete.foods" class="foodMenu">
+              <dt class="menuItems">{{food.name}}, {{food.price}}</dt>
+              <dd class="description">{{food.description}}</dd>
+              <dd class="details" ng-repeat="ingredient in food.contents">{{ingredient.name}}</dd>
+              <dd class="add"><button type="checkbox" ng-click="addItem(food)">Add to Cart</button><span ng-hide="toolTipper()">WARNING: THIS DOES NOT MEET YOUR FOOD PREFERENCES</span></dd>
+            </dl>
         </div>
         <div class="col-md-5 col-md-pull-7">
-          <img class="featurette-image img-responsive center-block" data-src="holder.js/500x500/auto" alt="Generic placeholder image">
+          <img class="featurette-image img-responsive center-block" src="https://s-media-cache-ak0.pinimg.com/736x/e6/52/24/e652240e387d30a722f7f5787a7ba269.jpg" alt="food image">
         </div>
       </div>
 
       <hr class="featurette-divider">
-
+    </div>
       <!-- /END THE FEATURETTES -->
+    
+      <div class="cart">
+        <h2>Your total order price is: <br>${{rounded}}</h2>
+      </div>
 
+    <!-- /.container -->
 
       <!-- FOOTER -->
       <footer>
@@ -106,7 +145,6 @@
         <p>&copy; 2015 {{restaurantDeets.owners}} &middot; {{restaurantDeets.phone}} &middot; {{restaurantDeets.email}} &middot; {{restaurantDeets.address}}</p>
       </footer>
 
-    </div><!-- /.container -->
 
 
     <!-- Bootstrap core JavaScript
