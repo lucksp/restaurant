@@ -97,7 +97,6 @@ var Ingredients = function(name, cals, vegan, glutenFree, citrusFree) {
 
 			)
 
-
 // DRINKS
 var drinkArray = [];
 var DrinkItem = function(name, description, price, contents) {
@@ -151,7 +150,6 @@ DrinkItem.prototype.isCitrusFree = function(){
 
 			)
 
-
 		var margie = new DrinkItem (
 
 			'House Margarita',
@@ -175,8 +173,6 @@ DrinkItem.prototype.isCitrusFree = function(){
 			false
 
 			)
-
-
 
 // FOOD PLATES
 
@@ -255,7 +251,6 @@ FoodPlate.prototype.isCitrusFree = function(){
 			true
 
 			)
-console.log(escargot.isGlutenFree())
 
 // MENU
 
@@ -268,25 +263,9 @@ var Menu = function(drinks, foods) {
 
 		var menuArray = new Menu(drinkArray, plateArray)
 
-// ORDERS
-
-// var orderArray = []
-// var Order = function(items) {
-// 	this.items = items;
-// }
-
-// 		var orderArray = new Order(
-
-// 			[drinkArray[0],
-// 			plateArray[1],
-// 			plateArray[2]]
-
-// 			)
-
 // RESTAURANT INFO
 
 var Restaurant = function(name, address, phone, description, email, owners, menu) {
-
 	this.name = name;
 	this.address = address;
 	this.phone = phone;
@@ -294,12 +273,9 @@ var Restaurant = function(name, address, phone, description, email, owners, menu
 	this.email = email;
 	this.owners = owners;
 	this.menu = menuArray;
-
-
 }
 
 		var restaurantInfo = new Restaurant (
-
 			'Restaurant de Semain',
 			'101 Main Street.  Boulder, CO 80303',
 			'303-EAT-HERE',
@@ -307,7 +283,6 @@ var Restaurant = function(name, address, phone, description, email, owners, menu
 			'semain@eat-here.com',
 			'Nadya Hill and Phil Lucks',
 			menuArray
-
 			)
 // CUSTOMER
 
@@ -322,14 +297,12 @@ var Customer = function(vegan, glutenFree, citrusFree){
 ///////////////////////////////
 
 	return {
-
 		restaurant		: restaurantInfo,
 		menuArray		: menuArray,
 		custyArray  	: custyArray,
 		ingredientArray : ingredientArray,
 		drinkArray		: drinkArray,
 		plateArray		: plateArray
-
 	}
 
 	}]);
@@ -377,8 +350,6 @@ angular.module('RestaurantApp')
 				$scope.rounded = $scope.orderTotal.toFixed(2);
 			}
 
-
-
 		// CUSTOMER INFO & TOOLTIPPER
 
 		$scope.emptyForm = function () {
@@ -392,22 +363,10 @@ angular.module('RestaurantApp')
 			}
 		}
 
-		// $scope.reset = function () {
-		// 	$scope.form.$setPristine();
-		// }
-
-
-		$scope.activeToolTip = false;
-		$scope.toolTipper = function() {
-			$scope.activeToolTip = !$scope.activeToolTip;
-			}
-
 		$scope.saveCusty = function() {
 				$scope.listAppearWhenClicked = !$scope.listAppearWhenClicked;
 				$scope.custyArray.push($scope.diet);
 				console.log($scope.custyArray)
-
-
 
 			for (var i = 0; i < $scope.custyArray.length; i++) {
 
@@ -432,9 +391,8 @@ angular.module('RestaurantApp')
 					else if ($scope.custyArray[i].citrusFree === true && $scope.drinkArray[j].isCitrusFree() === false){
 						$scope.drinkArray[j].activeToolTip = true;
 					}
-				}	
-
-		}
+				}
+			}
 			$scope.emptyForm();
 				if ($scope.listAppearWhenClicked === !true) {
 					$scope.userMessage = "Enter Your Info"
@@ -443,5 +401,15 @@ angular.module('RestaurantApp')
 					$scope.userMessage = "Close"
 				}
 		}
+			
+			$scope.resetForm = function() {
+				$scope.custyArray = []
+				for (var i = 0; i < $scope.plateArray.length; i++) {
+					$scope.plateArray[i].activeToolTip = false;
+				}
+				for (var j = 0; j < $scope.drinkArray.length; j++) {
+					$scope.drinkArray[j].activeToolTip = false;
+				}
+			}
 	}]);
 
